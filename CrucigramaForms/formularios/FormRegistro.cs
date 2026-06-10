@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrucigramaForms.Modelos;
+using CrucigramaForms.Persistencia;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +15,7 @@ namespace CrucigramaForms.formularios
         private Label label1, label2, label3;
         private TextBox textBox1, textBox2, textBox3;
         private Button btRegistrar, btCancelar;
+        private ComboBox cbTipoUsuario;
         public FormRegistro()
         {
             InitializeComponent();
@@ -42,12 +45,23 @@ namespace CrucigramaForms.formularios
             int[] filaY = { 30, 80, 130, 180, 230 };
 
             //creamos label
+            
             label1 = new Label { Left = xLabel, Top = filaY[0], Width = anchoLabel, Text = "Nombre: ", AutoSize = true };
             label2 = new Label { Left = xLabel, Top = filaY[1], Width = anchoLabel, Text = "Contraseña", AutoSize = true };
+            label3 = new Label { Left = xLabel, Top = filaY[2], Width = anchoLabel, Text = "TipoUsuario", AutoSize = true };
+
 
             //creamos textBox
             textBox1 = new TextBox { Left = xControl, Top = filaY[0], Width = anchoTextBox, Height = alto };
             textBox2 = new TextBox { Left = xControl, Top = filaY[1], Width = anchoTextBox, Height = alto };
+
+            //creacion de comboBox
+            cbTipoUsuario = new ComboBox { Left = xControl, Top = filaY[2], Width = anchoTextBox, Height = alto };
+            cbTipoUsuario.DropDownStyle = ComboBoxStyle.DropDownList; // no puede escribir, solo le permite elegir 
+            cbTipoUsuario.Items.Add("jugador");
+            cbTipoUsuario.Items.Add("admin");
+            cbTipoUsuario.SelectedIndex = 0; // selecciona "jugador" por defecto
+
 
             //botones
             int posi1 = this.ClientSize.Width / 2 / 2 - 243 / 2;
@@ -73,13 +87,47 @@ namespace CrucigramaForms.formularios
             btRegistrar.Cursor = Cursors.Hand;
             btCancelar.Cursor = Cursors.Hand;
 
-            //btIniciar.Click += btIniciar_Click;
-            //btCancelar.Click += btCancelar_Click;
+            btRegistrar.Click += btRegistrar_Click;
+            btCancelar.Click += btCancelar_Click;
 
-            this.Controls.AddRange(new Control[] { label1, label2, textBox1, textBox2, btRegistrar, btCancelar });
+            this.Controls.AddRange(new Control[] { label1, label2, label3, textBox1, textBox2, cbTipoUsuario, btRegistrar, btCancelar });
 
 
         }
 
+        private void btCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btRegistrar_Click(object sender, EventArgs e)
+        {
+
+            string nombre = textBox1.Text.Trim();
+            string contrasena = textBox2.Text.Trim();
+
+            // validación: campos vacíos
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(contrasena))
+            {
+                MessageBox.Show("Completá todos los campos.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var repo = new pUsuario();
+
+            // validación: nombre ya existe
+            if (repo.ExisteNombre(nombre))
+            {
+                MessageBox.Show("Ese nombre de usuario ya existe.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // crear y guardar el usuario
+            var nuevoUsuario = new Usuario(0, nombre, contrasena, "jugador");
+            repo.Agregar(nuevoUsuario);
+
+            MessageBox.Show($"Usuario '{nombre}' registrado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
+        }
     }
 }
