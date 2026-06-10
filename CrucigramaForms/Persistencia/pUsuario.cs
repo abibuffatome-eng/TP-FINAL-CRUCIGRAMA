@@ -9,6 +9,7 @@ namespace CrucigramaForms.Persistencia
 {
     internal class pUsuario
     {
+        //buenas hechas las persistencias por abi 
         public void Agregar(Usuario usuario)
         {
             using var conexion = Conexion.ObtenerConexion();
