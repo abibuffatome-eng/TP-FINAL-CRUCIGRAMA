@@ -39,6 +39,10 @@ namespace CrucigramaForms
             btRegistrar.ForeColor = Color.White; //color del texto del botón Guardar
             btRegistrar.FlatStyle = FlatStyle.Flat; //estilo plano para el botón Guardar
 
+            btLogin.BackColor = Color.FromArgb(0, 120, 212); //color de fondo del botón Guardar
+            btLogin.ForeColor = Color.White; //color del texto del botón Guardar
+            btLogin.FlatStyle = FlatStyle.Flat; //estilo plano para el botón Guardar
+
             //Hand cursor, lo cambia al cursor en una mano
             btRegistrar.Cursor = Cursors.Hand;
             btLogin.Cursor = Cursors.Hand;

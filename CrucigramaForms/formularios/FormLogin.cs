@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using CrucigramaForms.Modelos;
+using CrucigramaForms.Persistencia;
 
 
 namespace CrucigramaForms.formularios
@@ -72,12 +74,52 @@ namespace CrucigramaForms.formularios
             btIniciar.Cursor = Cursors.Hand;
             btCancelar.Cursor = Cursors.Hand;
 
-            //btIniciar.Click += btIniciar_Click;
-            //btCancelar.Click += btCancelar_Click;
+            btIniciar.Click += btIniciar_Click;
+            btCancelar.Click += btCancelar_Click;
 
             this.Controls.AddRange(new Control[] { label1, label2, textBox1, textBox2, btIniciar, btCancelar });
 
 
+        }
+        private void btIniciar_Click(object sender, EventArgs e)
+        {
+            string nombre = textBox1.Text.Trim();
+            string contrasena = textBox2.Text.Trim();
+
+            // validación: campos vacíos
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(contrasena))
+            {
+                MessageBox.Show("Completá todos los campos.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var repo = new pUsuario();
+            Usuario usuario = repo.Login(nombre, contrasena);
+
+            // si no encontró el usuario, Login devuelve null
+            if (usuario == null)
+            {
+                MessageBox.Show("Nombre o contraseña incorrectos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // login exitoso — abrís la pantalla según el tipo de usuario
+            MessageBox.Show($"Bienvenido, {usuario.Nombre}!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (usuario.EsAdmin())
+            {
+                // new FormAdmin(usuario).Show(); // cuando esté hecha
+            }
+            else
+            {
+                // new FormNiveles(usuario).Show(); // cuando esté hecha
+            }
+
+            this.Close();
+        }
+        private void btCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
         private void InicializarModificar()
         {
