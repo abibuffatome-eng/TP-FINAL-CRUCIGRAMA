@@ -6,12 +6,14 @@ namespace CrucigramaForms
 {
     public partial class Form1 : Form
     {
+        //creacion de botones
         private Button btRegistrar, btLogin;
         public Form1()
         {
             InitializeComponent();
             CrearFormulario();
         }
+        
         private void CrearFormulario()
         {
             this.Size = new Size(600, 400); //tamaño del formulario
