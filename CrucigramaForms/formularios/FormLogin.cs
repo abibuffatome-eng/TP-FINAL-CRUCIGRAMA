@@ -13,6 +13,7 @@ namespace CrucigramaForms.formularios
 {
     public partial class FormLogin : Form
     {
+        //creacion cosas
         private Label label1, label2, label3;
         private TextBox textBox1, textBox2, textBox3;
         private Button btIniciar, btCancelar, btMostrarContra;
