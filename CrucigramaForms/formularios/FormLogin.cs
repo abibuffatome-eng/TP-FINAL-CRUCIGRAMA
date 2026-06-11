@@ -15,7 +15,7 @@ namespace CrucigramaForms.formularios
     {
         private Label label1, label2, label3;
         private TextBox textBox1, textBox2, textBox3;
-        private Button btIniciar, btCancelar;
+        private Button btIniciar, btCancelar, btMostrarContra;
 
         public FormLogin()
         {
@@ -48,7 +48,7 @@ namespace CrucigramaForms.formularios
 
             //creamos textBox
             textBox1 = new TextBox { Left = xControl, Top = filaY[0], Width = anchoTextBox, Height = alto };
-            textBox2 = new TextBox { Left = xControl, Top = filaY[1], Width = anchoTextBox, Height = alto };
+            textBox2 = new TextBox { Left = xControl, Top = filaY[1], Width = anchoTextBox, Height = alto, PasswordChar = '*' };
 
             //botones
             int posi1 = this.ClientSize.Width / 2 / 2 - 243 / 2;
@@ -62,6 +62,7 @@ namespace CrucigramaForms.formularios
 
             btIniciar = new Button { Left = leftBtGuardar, Top = 178, Width = anchoBoton, Height = 48, Text = "Iniciar" };
             btCancelar = new Button { Left = leftBtCerrar, Top = 178, Width = anchoBoton, Height = 48, Text = "Cancelar" };
+            btMostrarContra = new Button { Left = xControl + anchoTextBox + 5, Top = filaY[1], Width = 100, Height = alto + 7, Text = "Mostrar" };
             //ancho boton = 243
             //areaUtil = this.ClientSize.Width , //ancho real del form
 
@@ -73,13 +74,28 @@ namespace CrucigramaForms.formularios
             //Hand cursor, lo cambia al cursor en una mano
             btIniciar.Cursor = Cursors.Hand;
             btCancelar.Cursor = Cursors.Hand;
+            btMostrarContra.Cursor = Cursors.Hand;
 
             btIniciar.Click += btIniciar_Click;
             btCancelar.Click += btCancelar_Click;
+            btMostrarContra.Click += btMostrarContra_Click;
 
-            this.Controls.AddRange(new Control[] { label1, label2, textBox1, textBox2, btIniciar, btCancelar });
+            this.Controls.AddRange(new Control[] { label1, label2, textBox1, textBox2, btIniciar, btCancelar, btMostrarContra });
 
 
+        }
+        private void btMostrarContra_Click(object sender, EventArgs e)
+        {
+            if (textBox2.PasswordChar == '*')
+            {
+                textBox2.PasswordChar = '\0';        //  '\0' significa "sin carácter", muestra el texto normal
+                btMostrarContra.Text = "Ocultar";
+            }
+            else
+            {
+                textBox2.PasswordChar = '*';
+                btMostrarContra.Text = "Mostrar";
+            }
         }
         private void btIniciar_Click(object sender, EventArgs e)
         {
@@ -122,6 +138,11 @@ namespace CrucigramaForms.formularios
             this.Close();
         }
         private void InicializarModificar()
+        {
+
+        }
+
+        private void FormLogin_Load(object sender, EventArgs e)
         {
 
         }
