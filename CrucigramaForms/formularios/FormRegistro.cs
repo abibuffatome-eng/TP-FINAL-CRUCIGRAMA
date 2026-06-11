@@ -14,7 +14,7 @@ namespace CrucigramaForms.formularios
     {
         private Label label1, label2, label3;
         private TextBox textBox1, textBox2, textBox3;
-        private Button btRegistrar, btCancelar;
+        private Button btRegistrar, btCancelar, btMostrarContra;
         private ComboBox cbTipoUsuario;
         public FormRegistro()
         {
@@ -53,11 +53,10 @@ namespace CrucigramaForms.formularios
 
             //creamos textBox
             textBox1 = new TextBox { Left = xControl, Top = filaY[0], Width = anchoTextBox, Height = alto };
-            textBox2 = new TextBox { Left = xControl, Top = filaY[1], Width = anchoTextBox, Height = alto };
+            textBox2 = new TextBox { Left = xControl, Top = filaY[1], Width = anchoTextBox, Height = alto, PasswordChar = '*' };
 
             //creacion de comboBox
             cbTipoUsuario = new ComboBox { Left = xControl, Top = filaY[2], Width = anchoTextBox, Height = alto };
-            cbTipoUsuario.DropDownStyle = ComboBoxStyle.DropDownList; // no puede escribir, solo le permite elegir 
             cbTipoUsuario.Items.Add("jugador");
             cbTipoUsuario.Items.Add("admin");
             cbTipoUsuario.SelectedIndex = 0; // selecciona "jugador" por defecto
@@ -75,8 +74,10 @@ namespace CrucigramaForms.formularios
 
             btRegistrar = new Button { Left = leftBtGuardar, Top = 178, Width = anchoBoton, Height = 48, Text = "Registrar" };
             btCancelar = new Button { Left = leftBtCerrar, Top = 178, Width = anchoBoton, Height = 48, Text = "Cancelar" };
-            //ancho boton = 243
-            //areaUtil = this.ClientSize.Width , //ancho real del form
+            btMostrarContra = new Button { Left = xControl + anchoTextBox + 5, Top = filaY[1]  , Width = 100, Height = alto + 7, Text = "Mostrar" };
+
+           
+            
 
             //color boton
             btRegistrar.BackColor = Color.FromArgb(0, 120, 212); //color de fondo del botón Guardar
@@ -86,13 +87,28 @@ namespace CrucigramaForms.formularios
             //Hand cursor, lo cambia al cursor en una mano
             btRegistrar.Cursor = Cursors.Hand;
             btCancelar.Cursor = Cursors.Hand;
+            btMostrarContra.Cursor = Cursors.Hand;
 
             btRegistrar.Click += btRegistrar_Click;
             btCancelar.Click += btCancelar_Click;
+            btMostrarContra.Click += btMostrarContra_Click;
 
-            this.Controls.AddRange(new Control[] { label1, label2, label3, textBox1, textBox2, cbTipoUsuario, btRegistrar, btCancelar });
+            this.Controls.AddRange(new Control[] { label1, label2, label3, textBox1, textBox2, cbTipoUsuario, btRegistrar, btCancelar, btMostrarContra });
 
 
+        }
+        private void btMostrarContra_Click(object sender, EventArgs e)
+        {
+            if (textBox2.PasswordChar == '*')
+            {
+                textBox2.PasswordChar = '\0';        //  '\0' esto sirve para poder mostraar la contrasena y sacar el (*)
+                btMostrarContra.Text = "Ocultar";
+            }
+            else
+            {
+                textBox2.PasswordChar = '*';
+                btMostrarContra.Text = "Mostrar";
+            }
         }
 
         private void btCancelar_Click(object sender, EventArgs e)
