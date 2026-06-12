@@ -59,7 +59,7 @@ namespace CrucigramaForms.formularios
             cbTipoUsuario = new ComboBox { Left = xControl, Top = filaY[2], Width = anchoTextBox, Height = alto };
             cbTipoUsuario.Items.Add("jugador");
             cbTipoUsuario.Items.Add("admin");
-            cbTipoUsuario.SelectedIndex = 0; // selecciona "jugador" por defecto
+           //cbTipoUsuario.SelectedIndex = 0; // selecciona "jugador" por defecto
 
 
             //botones

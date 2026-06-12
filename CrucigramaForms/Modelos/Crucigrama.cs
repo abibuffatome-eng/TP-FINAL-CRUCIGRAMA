@@ -41,8 +41,8 @@ namespace CrucigramaForms.Modelos
         {
             for (int i = 0; i < palabra.Texto.Length; i++)
             {
-                int fila = palabra.EsHorizontal() ? palabra.Fila : palabra.Fila + i;
-                int columna = palabra.EsHorizontal() ? palabra.Columna + i : palabra.Columna;
+                int fila = palabra.EsHorizontal() ? palabra.Fila : palabra.Fila + i;//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                int columna = palabra.EsHorizontal() ? palabra.Columna + i : palabra.Columna;//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
                 if (fila < Nivel.Filas && columna < Nivel.Columnas)
                     Grilla[fila, columna] = new Celda(fila, columna, palabra.Texto[i], false);
@@ -60,14 +60,14 @@ namespace CrucigramaForms.Modelos
         {
             for (int i = 0; i < palabra.Texto.Length; i++)
             {
-                int fila = palabra.EsHorizontal() ? palabra.Fila : palabra.Fila + i;
-                int columna = palabra.EsHorizontal() ? palabra.Columna + i : palabra.Columna;
+                int fila = palabra.EsHorizontal() ? palabra.Fila : palabra.Fila + i;//'''''''''''''''''''''''''''''''''
+                int columna = palabra.EsHorizontal() ? palabra.Columna + i : palabra.Columna;//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
                 if (!Grilla[fila, columna].EsCorrecta()) return false;
             }
             return true;
         }
 
-        public override string ToString() => $"{Titulo} — {Nivel}";
+        public override string ToString() => $"{Titulo} — {Nivel}";//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     }
 }

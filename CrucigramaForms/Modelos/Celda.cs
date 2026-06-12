@@ -12,7 +12,10 @@ namespace CrucigramaForms.Modelos
         public char LetraIngresada { get; set; }
         public bool EstaBloqueada { get; set; }
 
-        public Celda() { }
+        public Celda() 
+        { 
+
+        }
 
         public Celda(int fila, int columna, char letraCorrecta, bool estaBloqueada)
         {
