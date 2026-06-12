@@ -123,6 +123,7 @@ namespace CrucigramaForms.formularios
                     {
                         tb.BackColor = Color.White;
                         tb.TextChanged += Celda_TextChanged;
+                        tb.KeyPress += Celda_KeyPress;
                     }
 
                     _celdas[f, c] = tb;
@@ -130,13 +131,27 @@ namespace CrucigramaForms.formularios
                 }
             }
         }
-
+        private void Celda_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var tb = (TextBox)sender;
+            Point pos = (Point)tb.Tag;
+            Celda celda = _crucigrama.Grilla[pos.X, pos.Y];
+            if (celda.EstaVerificada)
+                e.Handled = true; // bloquea cualquier tecla
+        }
         private void Celda_TextChanged(object sender, EventArgs e)
         {
-            var tb = (TextBox)sender; //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-            Point pos = (Point)tb.Tag;//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            var tb = (TextBox)sender;
+            Point pos = (Point)tb.Tag;
             int fila = pos.X;
             int columna = pos.Y;
+
+            // si la celda ya fue verificada como correcta, ignorar
+            if (_crucigrama.Grilla[fila, columna].EstaVerificada) return;
+
+            // resetear color rojo al escribir de nuevo
+            if (tb.BackColor == Color.LightCoral)
+                tb.BackColor = Color.White;
 
             if (tb.Text.Length > 0)
                 cJuego.IngresarLetra(_crucigrama, fila, columna, tb.Text[0]);
@@ -146,18 +161,45 @@ namespace CrucigramaForms.formularios
 
         private void btVerificar_Click(object sender, EventArgs e)
         {
-            bool gano = cJuego.VerificarCrucigrama(_crucigrama);
+            int filas = _crucigrama.Nivel.Filas;
+            int columnas = _crucigrama.Nivel.Columnas;
 
-            if (gano)
+            for (int f = 0; f < filas; f++)
             {
-                var partida = cJuego.FinalizarPartida(_crucigrama, _usuario.Id);
-                new pPartida().Agregar(partida);
-                MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}", "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                for (int c = 0; c < columnas; c++)
+                {
+                    Celda celda = _crucigrama.Grilla[f, c];
+                    TextBox tb = _celdas[f, c];
+
+                    // saltear bloqueadas (negras) y ya verificadas (verdes)
+                    if (celda.EstaBloqueada || celda.EstaVerificada) continue;
+
+                    // saltear celdas vacías
+                    if (celda.EstaVacia()) continue;
+
+                    if (celda.EsCorrecta())
+                    {
+                        celda.EstaVerificada = true;
+                        tb.BackColor = Color.LightGreen;
+                        tb.ReadOnly = true;         // no se puede editar más
+                    }
+                    else
+                    {
+                        tb.BackColor = Color.LightCoral; // rojo suave para incorrectas
+                    }
+                }
             }
-            else
+
+            // verificar si ya ganó
+            if (cJuego.VerificarCrucigrama(_crucigrama))
             {
-                MessageBox.Show("Todavía faltan palabras correctas. ¡Seguí intentando!", "Casi...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                var partida = cJuego.FinalizarPartida(_crucigrama, _usuario?.Id ?? 0);
+                if (_usuario != null)
+                    new pPartida().Agregar(partida);
+
+                MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}",
+                                "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
             }
         }
 

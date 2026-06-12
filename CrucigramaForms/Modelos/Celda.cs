@@ -11,6 +11,7 @@ namespace CrucigramaForms.Modelos
         public char LetraCorrecta { get; set; }
         public char LetraIngresada { get; set; }
         public bool EstaBloqueada { get; set; }
+        public bool EstaVerificada { get; set; } = false;
 
         public Celda() 
         { 
