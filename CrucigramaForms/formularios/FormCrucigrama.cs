@@ -51,37 +51,47 @@ namespace CrucigramaForms.formularios
 
         private void CrearFormulario()
         {
-            this.Text = _crucigrama.Titulo;
-            this.Size = new Size(800, 650);
+            this.Text = "  " + _crucigrama.Titulo; 
+            this.Size = new Size(820, 680);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(235, 240, 245);
-            this.Font = new Font("Segoe UI", 10);
+            this.BackColor = Color.FromArgb(248, 246, 242); 
+            this.Font = new Font("Segoe UI", 10, FontStyle.Regular);
 
             panelGrilla = new Panel();
-            panelGrilla.Location = new Point(20, 20);
+            panelGrilla.Location = new Point(35, 35); 
             panelGrilla.AutoSize = true;
-            panelGrilla.BackColor = Color.FromArgb(235, 240, 245);
+            panelGrilla.BackColor = Color.Transparent; 
 
             ArmarGrilla();
 
+            
             btVerificar = new Button
             {
-                Text = "Verificar",
-                Size = new Size(150, 40),
-                Location = new Point(20, 420),
-                BackColor = Color.FromArgb(0, 120, 212),
+                Text = "VERIFICAR",
+                Size = new Size(160, 42),
+                Location = new Point(35, 450),
+                BackColor = Color.FromArgb(135, 152, 137), 
                 ForeColor = Color.White,
+                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
+            btVerificar.FlatAppearance.BorderSize = 0; 
 
+            
             btSalir = new Button
             {
-                Text = "Salir",
-                Size = new Size(150, 40),
-                Location = new Point(180, 420),
+                Text = "SALIR",
+                Size = new Size(160, 42),
+                Location = new Point(210, 450),
+                BackColor = Color.FromArgb(248, 246, 242), 
+                ForeColor = Color.FromArgb(100, 90, 85),   
+                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
+            btSalir.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188); 
+            btSalir.FlatAppearance.BorderSize = 1;
 
             btVerificar.Click += btVerificar_Click;
             btSalir.Click += btSalir_Click;
@@ -93,7 +103,7 @@ namespace CrucigramaForms.formularios
         {
             int filas = _crucigrama.Nivel.Filas;
             int columnas = _crucigrama.Nivel.Columnas;
-            int tamCelda = 35;
+            int tamCelda = 38; 
 
             _celdas = new TextBox[filas, columnas];
 
@@ -106,17 +116,18 @@ namespace CrucigramaForms.formularios
                     TextBox tb = new TextBox
                     {
                         Size = new Size(tamCelda, tamCelda),
-                        Location = new Point(c * tamCelda, f * tamCelda),
+                        Location = new Point(c * (tamCelda - 1), f * (tamCelda - 1)), 
                         TextAlign = HorizontalAlignment.Center,
-                        Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                        Font = new Font("Segoe UI", 13, FontStyle.Regular), 
+                        ForeColor = Color.FromArgb(60, 60, 60), 
                         MaxLength = 1,
-                        Tag = new Point(f, c), //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                        Tag = new Point(f, c),
                         BorderStyle = BorderStyle.FixedSingle
                     };
 
                     if (celda.EstaBloqueada)
                     {
-                        tb.BackColor = Color.Black;
+                        tb.BackColor = Color.FromArgb(120, 110, 102); 
                         tb.Enabled = false;
                     }
                     else

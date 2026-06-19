@@ -28,61 +28,99 @@ namespace CrucigramaForms.formularios
         }
         private void CrearFormularioRegistro()
         {
-            this.Size = new Size(600, 300); //tamaño del formulario
+            this.Size = new Size(580, 320); //tamaño del formulario
             this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
             this.StartPosition = FormStartPosition.CenterParent; // centra el formulario
-            this.BackColor = Color.FromArgb(235, 240, 245); //color de fondo
+            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo
             this.Font = new Font("Segoe UI", 10); // fuente del formulario
             this.MinimizeBox = false;
             this.MaximizeBox = false;
             this.ControlBox = false;
 
-            int xLabel = 120;
-            int xControl = 230;
-            int anchoLabel = 160;
+            int xLabel = 80;
+            int xControl = 200;
+            int anchoLabel = 110;
             int anchoTextBox = 240;
-            int alto = 24;
-            int[] filaY = { 30, 80, 130, 180, 230 };
+            int alto = 26;
+            int[] filaY = { 35, 85, 135 };
 
             //creamos label
-            
-            label1 = new Label { Left = xLabel, Top = filaY[0], Width = anchoLabel, Text = "Nombre: ", AutoSize = true };
-            label2 = new Label { Left = xLabel, Top = filaY[1], Width = anchoLabel, Text = "Contraseña", AutoSize = true };
-            label3 = new Label { Left = xLabel, Top = filaY[2], Width = anchoLabel, Text = "TipoUsuario", AutoSize = true };
+
+            label1 = new Label { Left = xLabel, Top = filaY[0] + 3, Width = anchoLabel, Text = "USUARIO", Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(110, 105, 100) };
+            label2 = new Label { Left = xLabel, Top = filaY[1] + 3, Width = anchoLabel, Text = "CONTRASEÑA", Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(110, 105, 100) };
+            label3 = new Label { Left = xLabel, Top = filaY[2] + 3, Width = anchoLabel, Text = "TIPO USUARIO", Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(110, 105, 100) };
 
 
             //creamos textBox
-            textBox1 = new TextBox { Left = xControl, Top = filaY[0], Width = anchoTextBox, Height = alto };
-            textBox2 = new TextBox { Left = xControl, Top = filaY[1], Width = anchoTextBox, Height = alto, PasswordChar = '*' };
+            textBox1 = new TextBox { Left = xControl, Top = filaY[0], Width = anchoTextBox, Height = alto, BorderStyle = BorderStyle.FixedSingle, ForeColor = Color.FromArgb(60, 60, 60) };
+            textBox2 = new TextBox { Left = xControl, Top = filaY[1], Width = anchoTextBox, Height = alto, PasswordChar = '*', BorderStyle = BorderStyle.FixedSingle, ForeColor = Color.FromArgb(60, 60, 60) };
 
             //creacion de comboBox
-            cbTipoUsuario = new ComboBox { Left = xControl, Top = filaY[2], Width = anchoTextBox, Height = alto };
+            cbTipoUsuario = new ComboBox
+            {
+                Left = xControl,
+                Top = filaY[2],
+                Width = anchoTextBox,
+                Height = alto,
+                FlatStyle = FlatStyle.Flat, // Estilo plano para que no tenga relieve viejo
+                ForeColor = Color.FromArgb(60, 60, 60),
+                DropDownStyle = ComboBoxStyle.DropDownList // Evita que el usuario escriba cualquier cosa en el combo
+            };
             cbTipoUsuario.Items.Add("jugador");
             cbTipoUsuario.Items.Add("admin");
             cbTipoUsuario.SelectedIndex = 0; // selecciona "jugador" por defecto
 
 
             //botones
-            int posi1 = this.ClientSize.Width / 2 / 2 - 243 / 2;
-            int posi2 = this.ClientSize.Width / 2 / 2 * 3 - 243 / 2;
+            int anchoBoton = 190;
+            int espacioEntreBotones = 30;
+            int inicioX = (this.ClientSize.Width - (anchoBoton * 2 + espacioEntreBotones)) / 2;
 
-            int anchoBoton = 243;
-            int MitadPantalla = this.ClientSize.Width / 2;
-            int margen = (MitadPantalla - anchoBoton) / 2;
-            int leftBtGuardar = margen;
-            int leftBtCerrar = MitadPantalla + margen;
+            btRegistrar = new Button
+            {
+                Left = inicioX,
+                Top = filaY[2] + 45,
+                Width = anchoBoton,
+                Height = 42,
+                Text = "REGISTRARSE",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                BackColor = Color.FromArgb(135, 152, 137),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            btRegistrar.FlatAppearance.BorderSize = 0;
 
-            btRegistrar = new Button { Left = leftBtGuardar, Top = 178, Width = anchoBoton, Height = 48, Text = "Registrar" };
-            btCancelar = new Button { Left = leftBtCerrar, Top = 178, Width = anchoBoton, Height = 48, Text = "Cancelar" };
-            btMostrarContra = new Button { Left = xControl + anchoTextBox + 5, Top = filaY[1]  , Width = 100, Height = alto + 7, Text = "Mostrar" };
+            btCancelar = new Button
+            {
+                Left = inicioX + anchoBoton + espacioEntreBotones,
+                Top = filaY[2] + 45,
+                Width = anchoBoton,
+                Height = 42,
+                Text = "CANCELAR",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                BackColor = Color.FromArgb(248, 246, 242),
+                ForeColor = Color.FromArgb(100, 90, 85),
+                FlatStyle = FlatStyle.Flat
+            };
+            btCancelar.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188);
+            btCancelar.FlatAppearance.BorderSize = 1;
 
-           
-            
+            btMostrarContra = new Button
+            {
+                Left = xControl + anchoTextBox + 8,
+                Top = filaY[1] - 1,
+                Width = 85,
+                Height = alto + 2,
+                Text = "Mostrar",
+                Font = new Font("Segoe UI", 8.5F),
+                BackColor = Color.White,
+                ForeColor = Color.FromArgb(100, 90, 85),
+                FlatStyle = FlatStyle.Flat
+            };
+            btMostrarContra.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188);
 
             //color boton
-            btRegistrar.BackColor = Color.FromArgb(0, 120, 212); //color de fondo del botón Guardar
-            btRegistrar.ForeColor = Color.White; //color del texto del botón Guardar
-            btRegistrar.FlatStyle = FlatStyle.Flat; //estilo plano para el botón Guardar
+            // (Los nuevos tonos, bordes limpios y flats ahora se configuran directamente arriba en la creación de cada botón)
 
             //Hand cursor, lo cambia al cursor en una mano
             btRegistrar.Cursor = Cursors.Hand;
