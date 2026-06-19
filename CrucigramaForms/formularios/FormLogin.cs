@@ -131,7 +131,7 @@ namespace CrucigramaForms.formularios
             }
             else
             {
-                FormNiveles niveles = new FormNiveles();
+                FormNiveles niveles = new FormNiveles(usuario);
                 this.Hide();
                 niveles.ShowDialog();
             }

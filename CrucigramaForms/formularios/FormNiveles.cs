@@ -15,7 +15,7 @@ namespace CrucigramaForms.formularios
     public partial class FormNiveles : Form
     {
         private Label label1;
-        private Button btFacil, btMedio, btDificil;
+        private Button btFacil, btMedio, btDificil, btRanking;
         Usuario usuario_;
         public FormNiveles()
         {
@@ -23,7 +23,12 @@ namespace CrucigramaForms.formularios
             InitializeComponent();
             CrearFormularioNiveles();
         }
-
+        internal FormNiveles(Usuario usuario_)
+        {
+            this.usuario_ = usuario_;
+            InitializeComponent();
+            CrearFormularioNiveles();
+        }
         private static string NormalizeString(string text)
         {
             if (string.IsNullOrEmpty(text)) return string.Empty;
@@ -53,26 +58,30 @@ namespace CrucigramaForms.formularios
             int xControl = 230;
             int anchoTextBox = 240;
             int alto = 24;
-            int[] filaY = { 30, 80, 130, 180, 230 };
 
-            label1 = new Label { Left = xLabel, Top = filaY[0], Width = anchoLabel, Text = "Seleccione un Nivel: ", AutoSize = true };
+            label1 = new Label { Left = xLabel, Top = 30, Width = anchoLabel, Text = "Seleccione un Nivel: ", AutoSize = true };
 
             int anchoBoton = 243;
             int MitadPantalla = this.ClientSize.Width / 2;
 
-            btFacil = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 78, Width = anchoBoton, Height = 48, Text = "Facil" };
-            btMedio = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 148, Width = anchoBoton, Height = 48, Text = "Medio" };
-            btDificil = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 218, Width = anchoBoton, Height = 48, Text = "Dificil" };
+            btFacil = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 78, Width = anchoBoton, Height = 48, Text = "Facil - (100)" };
+            btMedio = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 148, Width = anchoBoton, Height = 48, Text = "Medio - (250)" };
+            btDificil = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 218, Width = anchoBoton, Height = 48, Text = "Dificil - (500)" };
+            btRanking = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 288, Width = anchoBoton, Height = 48, Text = "Ranking" };
+
+            btRanking.BackColor = Color.Cyan;
 
             btFacil.Cursor = Cursors.Hand;
             btMedio.Cursor = Cursors.Hand;
             btDificil.Cursor = Cursors.Hand;
+            btRanking.Cursor = Cursors.Hand;
 
             btFacil.Click += btFacil_Click;
             btMedio.Click += btMedio_Click;
             btDificil.Click += btDificil_Click;
+            btRanking.Click += btRanking_Click;
 
-            this.Controls.AddRange(new Control[] {label1, btFacil, btMedio, btDificil });
+            this.Controls.AddRange(new Control[] {label1, btFacil, btMedio, btDificil, btRanking });
 
         }
         private void btFacil_Click(object sender, EventArgs e)
@@ -86,6 +95,13 @@ namespace CrucigramaForms.formularios
         private void btDificil_Click(object sender, EventArgs e)
         {
             ShowSeleccionCrucigramaForLevel("Dificil");
+        }
+        private void btRanking_Click(object sender, EventArgs e)
+        {
+            var ranking = new FormRanking();
+            this.Hide();
+            ranking.ShowDialog();
+            this.Show();
         }
 
         private void ShowSeleccionCrucigramaForLevel(string nivelNombre)
@@ -135,12 +151,9 @@ namespace CrucigramaForms.formularios
             // ensure grilla built
             selected.ConstruirGrilla();
 
-            using var juego = new FormCrucigrama(selected, null);
+            using var juego = new FormCrucigrama(selected, usuario_);
             this.Hide();
             juego.ShowDialog();
-            
-            var ranking = new FormRanking();
-            ranking.ShowDialog();
             
             this.Show();
         }

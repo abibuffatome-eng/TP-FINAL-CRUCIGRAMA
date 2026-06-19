@@ -11,6 +11,7 @@ namespace CrucigramaForms.Modelos
         public Nivel Nivel { get; set; }
         public List<Palabra> Palabras { get; set; }
         public Celda[,] Grilla { get; set; }
+        public int IntentosFallidos { get; set; } = 0;
 
         public Crucigrama()
         {

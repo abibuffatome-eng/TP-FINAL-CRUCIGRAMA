@@ -1,32 +1,20 @@
 ﻿using CrucigramaForms.Modelos;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 
 namespace CrucigramaForms.Logica
 {
     internal class cPuntaje
     {
+        private const int PENALIZACION_POR_INTENTO = 10; // ajustá este número a gusto
+
         public static int CalcularPuntaje(Crucigrama crucigrama)
         {
-            int palabrasCorrectas = 0;
+            // si no está completo, no hay puntaje (no debería llegar acá, pero por seguridad)
+            if (!crucigrama.EstaCompleto()) return 0;
 
-            foreach (var palabra in crucigrama.Palabras)
-                if (crucigrama.PalabraEsCorrecta(palabra))
-                    palabrasCorrectas++;
+            int puntaje = crucigrama.Nivel.PuntajeBase - (crucigrama.IntentosFallidos * PENALIZACION_POR_INTENTO);
 
-            if (palabrasCorrectas == 0) return 0;
-
-            int totalPalabras = crucigrama.Palabras.Count;
-            int puntajeBase = crucigrama.Nivel.PuntajeBase;
-            double proporcion = (double)palabrasCorrectas / totalPalabras;
-            int puntaje = (int)(puntajeBase * proporcion);
-
-            if (palabrasCorrectas == totalPalabras)
-                puntaje += puntajeBase / 2;
-
-            return puntaje;
+            return Math.Max(puntaje, 0); // nunca negativo
         }
     }
 }

@@ -45,8 +45,6 @@ namespace CrucigramaForms.formularios
             // Asignamos la fuente de datos
             var datos = _repo.ObtenerRanking();
 
-            MessageBox.Show("Cantidad de registros encontrados: " + datos.Count);
-
             dgvRanking.DataSource = datos;
 
             // Configuramos las columnas una vez cargados los datos

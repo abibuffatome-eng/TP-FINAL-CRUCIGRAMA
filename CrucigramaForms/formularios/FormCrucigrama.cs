@@ -25,6 +25,7 @@ namespace CrucigramaForms.formularios
         private Button btVerificar, btSalir;
         private Panel panelGrilla;
         private ListBox lbPistas;
+        private bool seAdvirtio = false;
 
         // constructor de prueba — sin parámetros
         public FormCrucigrama()
@@ -41,6 +42,7 @@ namespace CrucigramaForms.formularios
             _usuario = usuario;
             cJuego.IniciarPartida(_crucigrama);
             CrearFormulario();
+            
         }
 
         private void CrearFormulario()
@@ -102,6 +104,8 @@ namespace CrucigramaForms.formularios
             btSalir.Click += btSalir_Click;
 
             this.Controls.AddRange(new Control[] { panelGrilla, btVerificar, btSalir, lbPistas });
+
+            
         }
         private void ArmarGrilla()
         {
@@ -145,18 +149,7 @@ namespace CrucigramaForms.formularios
                 }
             }
         }
-        // Dentro de tu FormCrucigrama, donde inicializas la UI
-        private void CargarPistas()
-        {
-            lbPistas.Items.Clear(); // lbPistas es un ListBox
-
-            foreach (var p in _crucigrama.Palabras)
-            {
-                // Esto crea un formato tipo: "Fila 0, Col 0: Animal doméstico"
-                string pistaFormateada = $"({p.Fila}, {p.Columna}) - {p.Pista}";
-                lbPistas.Items.Add(pistaFormateada);
-            }
-        }
+        
         private void lbPistas_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Obtener la palabra seleccionada
@@ -197,49 +190,61 @@ namespace CrucigramaForms.formularios
 
         private void btVerificar_Click(object sender, EventArgs e)
         {
-            int filas = _crucigrama.Nivel.Filas;
-            int columnas = _crucigrama.Nivel.Columnas;
-
-            for (int f = 0; f < filas; f++)
+            if (!seAdvirtio)
             {
-                for (int c = 0; c < columnas; c++)
+                MessageBox.Show($"cada verificacion que tenga un error restara 10 puntos al puntaje total",
+                    "advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                seAdvirtio = true;
+            }
+            else
+            {
+                MessageBox.Show($"se te descontaron 10 punto",
+                    "advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                int filas = _crucigrama.Nivel.Filas;
+                int columnas = _crucigrama.Nivel.Columnas;
+
+                for (int f = 0; f < filas; f++)
                 {
-                    Celda celda = _crucigrama.Grilla[f, c];
-                    TextBox tb = _celdas[f, c];
-
-                    // saltear bloqueadas (negras) y ya verificadas (verdes)
-                    if (celda.EstaBloqueada || celda.EstaVerificada) continue;
-
-                    // saltear celdas vacías
-                    if (celda.EstaVacia()) continue;
-
-                    if (celda.EsCorrecta())
+                    for (int c = 0; c < columnas; c++)
                     {
-                        celda.EstaVerificada = true;
-                        tb.BackColor = Color.LightGreen;
-                        tb.ReadOnly = true;         // no se puede editar más
-                    }
-                    else
-                    {
-                        tb.BackColor = Color.LightCoral; // rojo suave para incorrectas
+                        Celda celda = _crucigrama.Grilla[f, c];
+                        TextBox tb = _celdas[f, c];
+
+                        if (celda.EstaBloqueada || celda.EstaVerificada) continue;
+                        if (celda.EstaVacia()) continue;
+
+                        if (celda.EsCorrecta())
+                        {
+                            celda.EstaVerificada = true;
+                            tb.BackColor = Color.LightGreen;
+                            tb.ReadOnly = true;
+                        }
+                        else
+                        {
+                            tb.BackColor = Color.LightCoral;
+                        }
                     }
                 }
-            }
 
-            // verificar si ya ganó
-            if (cJuego.VerificarCrucigrama(_crucigrama))
-            {
-                var partida = cJuego.FinalizarPartida(_crucigrama, _usuario?.Id ?? 0);
-                if (_usuario != null)
-                    new pPartida().Agregar(partida);
+                // verificar si ya ganó
+                if (cJuego.VerificarCrucigrama(_crucigrama))
+                {
+                    var partida = cJuego.FinalizarPartida(_crucigrama, _usuario?.Id ?? 0);
+                    if (_usuario != null)
+                        new pPartida().Agregar(partida);
 
-                MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}",
-                                "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                this.Close();
+                    MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}",
+                                    "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.Close();
+                }
+                else
+                {
+                    //verificacion fallida
+                    _crucigrama.IntentosFallidos++;
+                }
             }
         }
-
         private void btSalir_Click(object sender, EventArgs e)
         {
             this.Close();
