@@ -16,8 +16,10 @@ namespace CrucigramaForms.formularios
     {
         private Label label1;
         private Button btFacil, btMedio, btDificil;
+        Usuario usuario_;
         public FormNiveles()
         {
+            
             InitializeComponent();
             CrearFormularioNiveles();
         }
@@ -136,6 +138,10 @@ namespace CrucigramaForms.formularios
             using var juego = new FormCrucigrama(selected, null);
             this.Hide();
             juego.ShowDialog();
+            
+            var ranking = new FormRanking();
+            ranking.ShowDialog();
+            
             this.Show();
         }
     }

@@ -18,7 +18,7 @@ namespace CrucigramaForms
         {
             this.Size = new Size(600, 400); //tamaño del formulario
             this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
-            this.StartPosition = FormStartPosition.CenterParent; // centra el formulario
+            this.StartPosition = FormStartPosition.CenterScreen; // centra el formulario
             this.BackColor = Color.FromArgb(235, 240, 245); //color de fondo
             this.Font = new Font("Segoe UI", 10); // fuente del formulario
             this.MinimizeBox = false;

@@ -24,18 +24,12 @@ namespace CrucigramaForms.formularios
         private TextBox[,] _celdas;
         private Button btVerificar, btSalir;
         private Panel panelGrilla;
+        private ListBox lbPistas;
 
         // constructor de prueba — sin parámetros
         public FormCrucigrama()
         {
             InitializeComponent();
-
-            var nivel = new Nivel(2, "Medio", 10, 10, 250);
-            _crucigrama = new Crucigrama(1, "Crucigrama Medio", nivel);
-            _crucigrama.Palabras.Add(new Palabra(1, 1, "GATO", "Animal doméstico", 0, 0, "horizontal"));
-            _crucigrama.Palabras.Add(new Palabra(2, 1, "GUERRA", "Conflicto armado", 0, 0, "vertical"));
-
-            cJuego.IniciarPartida(_crucigrama);
             CrearFormulario();
         }
 
@@ -52,43 +46,63 @@ namespace CrucigramaForms.formularios
         private void CrearFormulario()
         {
             this.Text = _crucigrama.Titulo;
-            this.Size = new Size(800, 650);
+            // Aumentamos el tamaño total del formulario
+            this.Size = new Size(1200, 750);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(235, 240, 245);
-            this.Font = new Font("Segoe UI", 10);
+            this.Font = new Font("Segoe UI", 11); // Fuente base un poco más grande
 
             panelGrilla = new Panel();
-            panelGrilla.Location = new Point(20, 20);
+            panelGrilla.Location = new Point(30, 30); // Un poco más de margen inicial
             panelGrilla.AutoSize = true;
             panelGrilla.BackColor = Color.FromArgb(235, 240, 245);
 
             ArmarGrilla();
 
+            // LISTBOX DE PISTAS: más a la derecha y con fuente más grande
+            lbPistas = new ListBox
+            {
+                Location = new Point(800, 30), // Posición fija a la derecha para que no se solape
+                Size = new Size(350, 500),    // Más ancho y más alto
+                Font = new Font("Segoe UI", 11) // Letra más legible
+            };
+
+            lbPistas.Items.Add("--- PISTAS ---");
+            foreach (var p in _crucigrama.Palabras)
+            {
+                string orientacion = p.EsHorizontal() ? "Horizontal" : "Vertical";
+                lbPistas.Items.Add($"({p.Fila}, {p.Columna}) [{orientacion}]");
+                lbPistas.Items.Add($"  -> {p.Pista}");
+                lbPistas.Items.Add(""); // Espacio extra
+            }
+
+            // BOTONES más grandes y con mejor disposición
             btVerificar = new Button
             {
                 Text = "Verificar",
-                Size = new Size(150, 40),
-                Location = new Point(20, 420),
+                Size = new Size(200, 60), // Botón más grande
+                Location = new Point(30, 600), // Debajo de la grilla
                 BackColor = Color.FromArgb(0, 120, 212),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 12, FontStyle.Bold)
             };
 
             btSalir = new Button
             {
                 Text = "Salir",
-                Size = new Size(150, 40),
-                Location = new Point(180, 420),
-                Cursor = Cursors.Hand
+                Size = new Size(200, 60),
+                Location = new Point(250, 600), // A la derecha del de verificar
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 12, FontStyle.Bold)
             };
 
             btVerificar.Click += btVerificar_Click;
             btSalir.Click += btSalir_Click;
 
-            this.Controls.AddRange(new Control[] { panelGrilla, btVerificar, btSalir });
+            this.Controls.AddRange(new Control[] { panelGrilla, btVerificar, btSalir, lbPistas });
         }
-
         private void ArmarGrilla()
         {
             int filas = _crucigrama.Nivel.Filas;
@@ -130,6 +144,28 @@ namespace CrucigramaForms.formularios
                     panelGrilla.Controls.Add(tb);
                 }
             }
+        }
+        // Dentro de tu FormCrucigrama, donde inicializas la UI
+        private void CargarPistas()
+        {
+            lbPistas.Items.Clear(); // lbPistas es un ListBox
+
+            foreach (var p in _crucigrama.Palabras)
+            {
+                // Esto crea un formato tipo: "Fila 0, Col 0: Animal doméstico"
+                string pistaFormateada = $"({p.Fila}, {p.Columna}) - {p.Pista}";
+                lbPistas.Items.Add(pistaFormateada);
+            }
+        }
+        private void lbPistas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Obtener la palabra seleccionada
+            var palabra = _crucigrama.Palabras[lbPistas.SelectedIndex];
+
+            // Resaltar el inicio de la palabra en la grilla (puedes cambiar el color del borde o fondo)
+            TextBox tbInicio = _celdas[palabra.Fila, palabra.Columna];
+            tbInicio.Focus();
+            tbInicio.BackColor = Color.LightYellow; // Un color que indique selección
         }
         private void Celda_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -199,6 +235,7 @@ namespace CrucigramaForms.formularios
 
                 MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}",
                                 "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
                 this.Close();
             }
         }

@@ -48,23 +48,30 @@ namespace CrucigramaForms.Persistencia
             return lista;
         }
 
-        public List<Partida> ObtenerRanking()
+        public List<RankingItem> ObtenerRanking()
         {
-            var lista = new List<Partida>();
-
+            var lista = new List<RankingItem>();
             using var conexion = Conexion.ObtenerConexion();
             using var cmd = conexion.CreateCommand();
 
+            // Usamos INNER JOIN para unir Partidas con Usuarios mediante el UsuarioId
             cmd.CommandText = @"
-                SELECT * FROM Partidas 
-                ORDER BY Puntaje DESC 
-                LIMIT 10";
+        SELECT U.Nombre, SUM(P.Puntaje) as PuntajeTotal
+        FROM Partidas P
+        INNER JOIN Usuarios U ON P.UsuarioId = U.Id
+        GROUP BY U.Id, U.Nombre
+        ORDER BY PuntajeTotal DESC 
+        LIMIT 10";
 
             using var reader = cmd.ExecuteReader();
-
             while (reader.Read())
-                lista.Add(MapearPartida(reader));
-
+            {
+                lista.Add(new RankingItem
+                {
+                    NombreUsuario = reader.GetString(0), // U.Nombre
+                    PuntajeTotal = Convert.ToInt32(reader.GetValue(1)) // SUM(P.Puntaje)
+                });
+            }
             return lista;
         }
 
