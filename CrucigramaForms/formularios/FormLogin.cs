@@ -125,7 +125,9 @@ namespace CrucigramaForms.formularios
 
             if (usuario.EsAdmin())
             {
-                // new FormAdmin(usuario).Show(); // cuando esté hecha
+                var admin = new FormAdmin();
+                this.Hide();
+                admin.ShowDialog();
             }
             else
             {
@@ -140,6 +142,7 @@ namespace CrucigramaForms.formularios
         {
             this.Close();
         }
+
         private void InicializarModificar()
         {
 

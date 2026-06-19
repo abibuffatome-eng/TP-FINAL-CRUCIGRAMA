@@ -111,7 +111,12 @@ namespace CrucigramaForms.Persistencia
 
             Nivel nivel = _nivelRepo.ObtenerPorId(nivelId);
 
-            return new Crucigrama(id, titulo, nivel);
+            var cruc = new Crucigrama(id, titulo, nivel);
+            // load palabras for this crucigrama
+            var palRepo = new pPalabra();
+            cruc.Palabras = palRepo.ObtenerPorCrucigrama(id);
+
+            return cruc;
         }
     }
 }

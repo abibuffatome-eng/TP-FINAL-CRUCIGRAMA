@@ -5,6 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using CrucigramaForms.Persistencia;
+using CrucigramaForms.Modelos;
+using System.Globalization;
+using System.Text;
 
 namespace CrucigramaForms.formularios
 {
@@ -16,6 +20,20 @@ namespace CrucigramaForms.formularios
         {
             InitializeComponent();
             CrearFormularioNiveles();
+        }
+
+        private static string NormalizeString(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return string.Empty;
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+            foreach (var ch in normalized)
+            {
+                var uc = CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                    sb.Append(ch);
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
         private void CrearFormularioNiveles()
         {
@@ -57,23 +75,67 @@ namespace CrucigramaForms.formularios
         }
         private void btFacil_Click(object sender, EventArgs e)
         {
-            FormCrucigrama formCrucigramaFacil = new FormCrucigrama();
-            this.Hide();
-            formCrucigramaFacil.ShowDialog();
-            this.Show();
+            ShowSeleccionCrucigramaForLevel("Facil");
         }
         private void btMedio_Click(object sender, EventArgs e)
         {
-            FormCrucigrama formCrucigramaMedio = new FormCrucigrama();
-            this.Hide();
-            formCrucigramaMedio.ShowDialog();
-            this.Show();
+            ShowSeleccionCrucigramaForLevel("Medio");
         }
         private void btDificil_Click(object sender, EventArgs e)
         {
-            FormCrucigrama formCrucigramaDificil = new FormCrucigrama();
+            ShowSeleccionCrucigramaForLevel("Dificil");
+        }
+
+        private void ShowSeleccionCrucigramaForLevel(string nivelNombre)
+        {
+            var nivelRepo = new pNivel();
+            var crucRepo = new pCrucigrama();
+            // try to match nivel by name case-insensitive and diacritics-insensitive
+            Nivel nivel = null;
+            foreach (var n in nivelRepo.ObtenerTodos())
+            {
+                if (NormalizeString(n.Nombre).Equals(NormalizeString(nivelNombre), StringComparison.OrdinalIgnoreCase)) { nivel = n; break; }
+            }
+            if (nivel == null)
+            {
+                MessageBox.Show($"No se encontró el nivel '{nivelNombre}'.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var crucs = crucRepo.ObtenerPorNivel(nivel.Id);
+            if (crucs == null || crucs.Count == 0)
+            {
+                MessageBox.Show($"No hay crucigramas disponibles para el nivel {nivelNombre}.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using var f = new Form();
+            f.Text = "Seleccionar Crucigrama";
+            f.Size = new Size(500, 400);
+            f.StartPosition = FormStartPosition.CenterParent;
+
+            var lb = new ListBox { Left = 10, Top = 10, Width = 460, Height = 300 };
+            foreach (var c in crucs) lb.Items.Add(c);
+
+            var btnPlay = new Button { Text = "Jugar", Left = 10, Top = 320, Width = 120, Height = 36, Cursor = Cursors.Hand };
+            var btnCancel = new Button { Text = "Cancelar", Left = 150, Top = 320, Width = 120, Height = 36, Cursor = Cursors.Hand };
+
+            btnPlay.Click += (s, e) => { if (lb.SelectedItem != null) f.DialogResult = DialogResult.OK; else MessageBox.Show("Seleccioná un crucigrama.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning); };
+            btnCancel.Click += (s, e) => f.DialogResult = DialogResult.Cancel;
+
+            f.Controls.AddRange(new Control[] { lb, btnPlay, btnCancel });
+
+            if (f.ShowDialog(this) != DialogResult.OK) return;
+
+            var selected = lb.SelectedItem as Crucigrama;
+            if (selected == null) return;
+
+            // ensure grilla built
+            selected.ConstruirGrilla();
+
+            using var juego = new FormCrucigrama(selected, null);
             this.Hide();
-            formCrucigramaDificil.ShowDialog();
+            juego.ShowDialog();
             this.Show();
         }
     }

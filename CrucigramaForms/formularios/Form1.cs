@@ -7,7 +7,7 @@ namespace CrucigramaForms
     public partial class Form1 : Form
     {
         //creacion de botones
-        private Button btRegistrar, btLogin;
+        private Button btRegistrar, btLogin, btSalirApp;
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +33,7 @@ namespace CrucigramaForms
 
             btRegistrar = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 78, Width = anchoBoton, Height = 48, Text = "Registrar" };
             btLogin = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 178, Width = anchoBoton, Height = 48, Text = "Login" };
+            btSalirApp = new Button { Left = MitadPantalla - (anchoBoton / 2), Top = 258, Width = anchoBoton, Height = 36, Text = "Salir App" };
 
             //color boton
             btRegistrar.BackColor = Color.FromArgb(0, 120, 212); //color de fondo del botón Guardar
@@ -49,8 +50,9 @@ namespace CrucigramaForms
 
             btRegistrar.Click += btRegistrar_Click;
             btLogin.Click += btLogin_Click;
+            btSalirApp.Click += btSalirApp_Click;
 
-            this.Controls.AddRange(new Control[] { btRegistrar, btLogin });
+            this.Controls.AddRange(new Control[] { btRegistrar, btLogin, btSalirApp });
 
         }
         private void btRegistrar_Click (object sender, EventArgs e)
@@ -62,6 +64,10 @@ namespace CrucigramaForms
         {
             FormLogin formLogin = new FormLogin();
             formLogin.ShowDialog();
+        }
+        private void btSalirApp_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
         private void Form1_Load(object sender, EventArgs e)
         {

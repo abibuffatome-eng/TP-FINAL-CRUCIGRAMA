@@ -59,7 +59,7 @@ namespace CrucigramaForms.formularios
             cbTipoUsuario = new ComboBox { Left = xControl, Top = filaY[2], Width = anchoTextBox, Height = alto };
             cbTipoUsuario.Items.Add("jugador");
             cbTipoUsuario.Items.Add("admin");
-           //cbTipoUsuario.SelectedIndex = 0; // selecciona "jugador" por defecto
+            cbTipoUsuario.SelectedIndex = 0; // selecciona "jugador" por defecto
 
 
             //botones
@@ -138,8 +138,9 @@ namespace CrucigramaForms.formularios
                 return;
             }
 
-            // crear y guardar el usuario
-            var nuevoUsuario = new Usuario(0, nombre, contrasena, "jugador");
+            // crear y guardar el usuario (usar el tipo seleccionado en el combo)
+            var tipoSeleccionado = cbTipoUsuario.SelectedItem as string ?? "jugador";
+            var nuevoUsuario = new Usuario(0, nombre, contrasena, tipoSeleccionado);
             repo.Agregar(nuevoUsuario);
 
             MessageBox.Show($"Usuario '{nombre}' registrado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
