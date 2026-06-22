@@ -23,7 +23,9 @@ namespace CrucigramaForms.formularios
         private Button btVerificar, btSalir;
         private Panel panelGrilla;
         private ListBox lbPistas;
-        private bool seAdvirtio = false;
+        private Label lbPuntaje;
+        private bool seAdvirtio = false; 
+        private bool huboError = false;
 
         // constructor de prueba — sin parámetros
         public FormCrucigrama()
@@ -63,7 +65,7 @@ namespace CrucigramaForms.formularios
             // LISTBOX DE PISTAS: más a la derecha y con fuente más grande
             lbPistas = new ListBox
             {
-                Location = new Point(800, 35), // Posición fija a la derecha para que no se solape
+                Location = new Point(800, 45), // Posición fija a la derecha para que no se solape
                 Size = new Size(350, 500),    // Más ancho y más alto
                 Font = new Font("Segoe UI", 10.5F), // Letra más legible
                 ForeColor = Color.FromArgb(60, 60, 60),
@@ -79,6 +81,14 @@ namespace CrucigramaForms.formularios
                 lbPistas.Items.Add($"  -> {p.Pista}");
                 lbPistas.Items.Add(""); // Espacio extra
             }
+            lbPuntaje = new Label
+            {
+                Text = $"Puntaje: {_crucigrama.Nivel.PuntajeBase}",
+                Location = new Point(800, 0),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.FromArgb(0, 120, 212)
+            };
 
             // BOTONES más grandes y con mejor disposición
             btVerificar = new Button
@@ -112,7 +122,7 @@ namespace CrucigramaForms.formularios
             btVerificar.Click += btVerificar_Click;
             btSalir.Click += btSalir_Click;
 
-            this.Controls.AddRange(new Control[] { panelGrilla, btVerificar, btSalir, lbPistas });
+            this.Controls.AddRange(new Control[] { panelGrilla, btVerificar, btSalir, lbPistas, lbPuntaje });
 
 
         }
@@ -208,8 +218,6 @@ namespace CrucigramaForms.formularios
             }
             else
             {
-                MessageBox.Show($"se te descontaron 10 punto",
-                    "advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 int filas = _crucigrama.Nivel.Filas;
                 int columnas = _crucigrama.Nivel.Columnas;
 
@@ -232,6 +240,7 @@ namespace CrucigramaForms.formularios
                         else
                         {
                             tb.BackColor = Color.LightCoral;
+                            huboError = true;
                         }
                     }
                 }
@@ -243,6 +252,8 @@ namespace CrucigramaForms.formularios
                     if (_usuario != null)
                         new pPartida().Agregar(partida);
 
+                    lbPuntaje.Text = $"Puntaje: {partida.Puntaje}";
+
                     MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}",
                                     "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -250,8 +261,15 @@ namespace CrucigramaForms.formularios
                 }
                 else
                 {
+                    //MessageBox.Show($"se te descontaron 10 punto",
+                    //    "advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     //verificacion fallida
-                    _crucigrama.IntentosFallidos++;
+                    if (huboError)
+                    {
+                        _crucigrama.IntentosFallidos++;
+                        huboError = false;
+                    }
+                    lbPuntaje.Text = $"Puntaje: {cPuntaje.CalcularPuntajeActual(_crucigrama)}";
                 }
             }
         }
