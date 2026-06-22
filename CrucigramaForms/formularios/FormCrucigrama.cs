@@ -15,7 +15,7 @@ using System.Globalization;
 
 namespace CrucigramaForms.formularios
 {
-    public partial class FormCrucigrama : Form
+    public partial class FormCrucigrama : Form //cambio apra q se suba al GITTTTTTT PULLL
     {
         private Crucigrama _crucigrama;
         private Usuario _usuario;
