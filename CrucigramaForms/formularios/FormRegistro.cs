@@ -28,11 +28,11 @@ namespace CrucigramaForms.formularios
         }
         private void CrearFormularioRegistro()
         {
-            this.Size = new Size(580, 320); //tamaño del formulario
-            this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
-            this.StartPosition = FormStartPosition.CenterParent; // centra el formulario
-            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo
-            this.Font = new Font("Segoe UI", 10); // fuente del formulario
+            this.Size = new Size(580, 320); 
+            this.FormBorderStyle = FormBorderStyle.FixedDialog; 
+            this.StartPosition = FormStartPosition.CenterParent; 
+            this.BackColor = Color.FromArgb(248, 246, 242); 
+            this.Font = new Font("Segoe UI", 10); 
             this.MinimizeBox = false;
             this.MaximizeBox = false;
             this.ControlBox = false;
@@ -45,7 +45,6 @@ namespace CrucigramaForms.formularios
             int[] filaY = { 35, 85, 135 };
 
             //creamos label
-
             label1 = new Label { Left = xLabel, Top = filaY[0] + 3, Width = anchoLabel, Text = "USUARIO", Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(110, 105, 100) };
             label2 = new Label { Left = xLabel, Top = filaY[1] + 3, Width = anchoLabel, Text = "CONTRASEÑA", Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(110, 105, 100) };
             label3 = new Label { Left = xLabel, Top = filaY[2] + 3, Width = anchoLabel, Text = "TIPO USUARIO", Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(110, 105, 100) };
@@ -118,9 +117,6 @@ namespace CrucigramaForms.formularios
                 FlatStyle = FlatStyle.Flat
             };
             btMostrarContra.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188);
-
-            //color boton
-            // (Los nuevos tonos, bordes limpios y flats ahora se configuran directamente arriba en la creación de cada botón)
 
             //Hand cursor, lo cambia al cursor en una mano
             btRegistrar.Cursor = Cursors.Hand;

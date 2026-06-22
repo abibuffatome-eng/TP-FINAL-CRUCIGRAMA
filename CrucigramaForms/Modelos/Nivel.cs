@@ -22,10 +22,6 @@ namespace CrucigramaForms.Modelos
             Columnas = columnas;
             PuntajeBase = puntajeBase;
 
-            // bueno mira prueba de GIT modificacion 
-            //asdsad
-
-            //asdasdd
         }
 
         public override string ToString() => $"{Nombre} ({Filas}x{Columnas})";

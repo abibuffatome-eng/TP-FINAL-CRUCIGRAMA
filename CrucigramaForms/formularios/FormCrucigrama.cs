@@ -15,7 +15,7 @@ using System.Globalization;
 
 namespace CrucigramaForms.formularios
 {
-    public partial class FormCrucigrama : Form //cambio apra q se suba al GITTTTTTT PULLL
+    public partial class FormCrucigrama : Form 
     {
         private Crucigrama _crucigrama;
         private Usuario _usuario;
@@ -23,7 +23,6 @@ namespace CrucigramaForms.formularios
         private Button btVerificar, btSalir;
         private Panel panelGrilla;
 
-        // Listas separadas para las pistas horizontales y verticales
         private ListBox lbHorizontales;
         private ListBox lbVerticales;
         private Label lblHorizontales;
@@ -32,14 +31,12 @@ namespace CrucigramaForms.formularios
         private Label lbPuntaje;
         private bool seAdvirtio = false;
 
-        // constructor de prueba — sin parámetros
         public FormCrucigrama()
         {
             InitializeComponent();
             CrearFormulario();
         }
 
-        // constructor real — recibe crucigrama y usuario
         internal FormCrucigrama(Crucigrama crucigrama, Usuario usuario)
         {
             InitializeComponent();
@@ -52,22 +49,19 @@ namespace CrucigramaForms.formularios
         private void CrearFormulario()
         {
             this.Text = "  Crucigrama: " + _crucigrama.Titulo;
-            this.StartPosition = FormStartPosition.CenterScreen; // centra el formulario
-            this.BackColor = Color.FromArgb(248, 246, 242); // color de fondo
-            this.Font = new Font("Segoe UI", 11); // fuente del formulario
-            this.FormBorderStyle = FormBorderStyle.FixedDialog; // evita q usuario redimensione el formulario
+            this.StartPosition = FormStartPosition.CenterScreen; 
+            this.BackColor = Color.FromArgb(248, 246, 242); 
+            this.Font = new Font("Segoe UI", 11); 
+            this.FormBorderStyle = FormBorderStyle.FixedDialog; 
             this.MaximizeBox = false;
 
-            // Creación del panel de la grilla (lo corremos un toque a la derecha y abajo para los números externos)
             panelGrilla = new Panel();
             panelGrilla.Location = new Point(55, 80);
             panelGrilla.BackColor = Color.Transparent;
             ArmarGrilla();
 
-            // Cálculo dinámico para que las pistas se ubiquen solas a la derecha de la grilla
             int margenDerechoGrilla = panelGrilla.Left + panelGrilla.Width + 40;
 
-            // Etiqueta de puntaje
             lbPuntaje = new Label
             {
                 Text = $"PUNTUACIÓN: {cPuntaje.CalcularPuntajeActual(_crucigrama)}",
@@ -77,7 +71,6 @@ namespace CrucigramaForms.formularios
                 ForeColor = Color.FromArgb(135, 152, 137)
             };
 
-            // Título y lista para pistas horizontales
             lblHorizontales = new Label
             {
                 Text = "PALABRAS HORIZONTALES",
@@ -98,7 +91,6 @@ namespace CrucigramaForms.formularios
                 HorizontalScrollbar = true
             };
 
-            // Título y lista para pistas verticales
             lblVerticales = new Label
             {
                 Text = "PALABRAS VERTICALES",
@@ -125,7 +117,6 @@ namespace CrucigramaForms.formularios
             lbHorizontales.SelectedIndexChanged += lbHorizontales_SelectedIndexChanged;
             lbVerticales.SelectedIndexChanged += lbVerticales_SelectedIndexChanged;
 
-            // Calcula la posición de los botones para que queden abajo de todo
             int botonY = Math.Max(panelGrilla.Top + panelGrilla.Height + 30, lbVerticales.Top + lbVerticales.Height + 30);
 
             // Botón Verificar
@@ -160,10 +151,8 @@ namespace CrucigramaForms.formularios
             btVerificar.Click += btVerificar_Click;
             btSalir.Click += btSalir_Click;
 
-            // Ajusta el tamaño de la ventana según el tamaño del crucigrama seleccionado
             this.ClientSize = new Size(lbHorizontales.Left + lbHorizontales.Width + 40, btVerificar.Top + btVerificar.Height + 40);
 
-            // Agrega todos los controles al formulario
             this.Controls.AddRange(new Control[] {
                 panelGrilla, lbPuntaje, lblHorizontales, lbHorizontales,
                 lblVerticales, lbVerticales, btVerificar, btSalir
@@ -174,11 +163,11 @@ namespace CrucigramaForms.formularios
         {
             int filas = _crucigrama.Nivel.Filas;
             int columnas = _crucigrama.Nivel.Columnas;
-            int tamCelda = 40; // Tamaño de cada cuadradito
+            int tamCelda = 40;                              // Tamaño de cada cuadradito
 
             _celdas = new TextBox[filas, columnas];
 
-            // --- AGREGAR NÚMEROS DE COLUMNAS (ARRIBA) ---
+            // agrega numeros de columnas, parte superior
             for (int c = 0; c < columnas; c++)
             {
                 Label lblCol = new Label
@@ -188,13 +177,13 @@ namespace CrucigramaForms.formularios
                     ForeColor = Color.FromArgb(100, 90, 85),
                     TextAlign = ContentAlignment.MiddleCenter,
                     Size = new Size(tamCelda, 20),
-                    // Se posiciona justo arriba de cada columna de la grilla
+
                     Location = new Point(panelGrilla.Left + (c * (tamCelda - 1)), panelGrilla.Top - 22)
                 };
-                this.Controls.Add(lblCol); // Se agrega directo al Form, no al panel
+                this.Controls.Add(lblCol); 
             }
 
-            // --- AGREGAR NÚMEROS DE FILAS (A LA IZQUIERDA) ---
+            // agrega numeros a las filas
             for (int f = 0; f < filas; f++)
             {
                 Label lblFil = new Label
@@ -210,7 +199,7 @@ namespace CrucigramaForms.formularios
                 this.Controls.Add(lblFil); // Se agrega directo al Form, no al panel
             }
 
-            // --- CREACIÓN DE LA GRILLA DE TEXTBOXS ---
+            // creacion de la grilla 
             for (int f = 0; f < filas; f++)
             {
                 for (int c = 0; c < columnas; c++)
@@ -257,7 +246,6 @@ namespace CrucigramaForms.formularios
 
             foreach (var p in _crucigrama.Palabras)
             {
-                // Mantenemos tu formato de coordenadas original: (Fila, Columna)
                 string itemTexto = $"({p.Fila + 1}, {p.Columna + 1}) — {p.Pista}";
 
                 if (p.EsHorizontal())
@@ -284,7 +272,6 @@ namespace CrucigramaForms.formularios
             EnfocarCeldaDesdePista(lbVerticales.SelectedItem?.ToString());
         }
 
-        // Hace foco en la celda inicial buscando las coordenadas del texto de la pista
         private void EnfocarCeldaDesdePista(string textoPista)
         {
             if (string.IsNullOrEmpty(textoPista) || !textoPista.Contains("—")) return;

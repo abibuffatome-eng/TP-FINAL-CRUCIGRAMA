@@ -43,11 +43,11 @@ namespace CrucigramaForms.formularios
         }
         private void CrearFormularioNiveles()
         {
-            this.Size = new Size(600, 450); // Ajustamos un poquito el alto para que entre el ranking cómodo
-            this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
-            this.StartPosition = FormStartPosition.CenterParent; // centra el formulario
-            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo crema
-            this.Font = new Font("Segoe UI", 10); // fuente del formulario
+            this.Size = new Size(600, 450); 
+            this.FormBorderStyle = FormBorderStyle.FixedDialog; 
+            this.StartPosition = FormStartPosition.CenterParent; 
+            this.BackColor = Color.FromArgb(248, 246, 242); 
+            this.Font = new Font("Segoe UI", 10);
             this.MinimizeBox = false;
             this.MaximizeBox = false;
             this.ControlBox = true;

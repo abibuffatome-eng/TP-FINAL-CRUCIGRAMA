@@ -13,25 +13,23 @@ namespace CrucigramaForms.formularios
 {
     public partial class FormLogin : Form
     {
-        //creacion cosas
-        private Label label1, label2, label3;
-        private TextBox textBox1, textBox2, textBox3;
+        private Label label1, label2;
+        private TextBox textBox1, textBox2;
         private Button btIniciar, btCancelar, btMostrarContra;
 
         public FormLogin()
         {
             InitializeComponent();
             CrearFormularioLogin();
-            InicializarModificar();
         }
 
         private void CrearFormularioLogin()
         {
-            this.Size = new Size(580, 320); //tamaño del formulario
-            this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
-            this.StartPosition = FormStartPosition.CenterParent; // centra el formulario
-            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo
-            this.Font = new Font("Segoe UI", 10); // fuente del formulario
+            this.Size = new Size(580, 320); 
+            this.FormBorderStyle = FormBorderStyle.FixedDialog; 
+            this.StartPosition = FormStartPosition.CenterParent; 
+            this.BackColor = Color.FromArgb(248, 246, 242); 
+            this.Font = new Font("Segoe UI", 10); 
             this.MinimizeBox = false;
             this.MaximizeBox = false;
             this.ControlBox = false;
@@ -99,12 +97,7 @@ namespace CrucigramaForms.formularios
             };
             btMostrarContra.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188);
 
-            //ancho boton = 243
-            //areaUtil = this.ClientSize.Width , //ancho real del form
-
-            //color boton
-            // (Los colores, bordes limpios y flats ahora se configuran directamente arriba en la creación de cada botón)
-
+            
             //Hand cursor, lo cambia al cursor en una mano
             btIniciar.Cursor = Cursors.Hand;
             btCancelar.Cursor = Cursors.Hand;
@@ -151,7 +144,7 @@ namespace CrucigramaForms.formularios
                 return;
             }
 
-            // login exitoso — abrís la pantalla según el tipo de usuario
+            // login exitoso, abrís la pantalla según el tipo de usuario
             MessageBox.Show($"Bienvenido, {usuario.Nombre}!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             if (usuario.EsAdmin())
@@ -173,12 +166,6 @@ namespace CrucigramaForms.formularios
         {
             this.Close();
         }
-
-        private void InicializarModificar()
-        {
-
-        }
-
         private void FormLogin_Load(object sender, EventArgs e)
         {
 

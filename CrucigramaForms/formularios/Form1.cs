@@ -14,11 +14,11 @@ namespace CrucigramaForms
 
         private void CrearFormulario()
         {
-            this.Size = new Size(600, 480); //tamaño del formulario
-            this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
-            this.StartPosition = FormStartPosition.CenterScreen; // centra el formulario
-            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo
-            this.Font = new Font("Segoe UI", 10); // fuente del formulario
+            this.Size = new Size(600, 480); 
+            this.FormBorderStyle = FormBorderStyle.FixedDialog; 
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = Color.FromArgb(248, 246, 242); 
+            this.Font = new Font("Segoe UI", 10); 
             this.MinimizeBox = false;
             this.MaximizeBox = false;
             this.ControlBox = false;
@@ -97,13 +97,13 @@ namespace CrucigramaForms
             btSalirApp.FlatAppearance.BorderSize = 1;
 
             //color boton
-            btRegistrar.BackColor = Color.FromArgb(135, 152, 137); //color de fondo del botón Guardar
-            btRegistrar.ForeColor = Color.White; //color del texto del botón Guardar
-            btRegistrar.FlatStyle = FlatStyle.Flat; //estilo plano para el botón Guardar
+            btRegistrar.BackColor = Color.FromArgb(135, 152, 137); 
+            btRegistrar.ForeColor = Color.White; 
+            btRegistrar.FlatStyle = FlatStyle.Flat;
 
-            btLogin.BackColor = Color.FromArgb(135, 152, 137); //color de fondo del botón Guardar
-            btLogin.ForeColor = Color.White; //color del texto del botón Guardar
-            btLogin.FlatStyle = FlatStyle.Flat; //estilo plano para el botón Guardar
+            btLogin.BackColor = Color.FromArgb(135, 152, 137); 
+            btLogin.ForeColor = Color.White; 
+            btLogin.FlatStyle = FlatStyle.Flat; 
 
             //Hand cursor, lo cambia al cursor en una mano
             btRegistrar.Cursor = Cursors.Hand;
