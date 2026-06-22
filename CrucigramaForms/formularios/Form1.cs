@@ -1,7 +1,5 @@
 using CrucigramaForms.formularios;
 
-
-
 namespace CrucigramaForms
 {
     public partial class Form1 : Form
@@ -13,12 +11,12 @@ namespace CrucigramaForms
             InitializeComponent();
             CrearFormulario();
         }
-        
+
         private void CrearFormulario()
         {
             this.Size = new Size(600, 480); //tamaño del formulario
             this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
-            this.StartPosition = FormStartPosition.CenterParent; // centra el formulario
+            this.StartPosition = FormStartPosition.CenterScreen; // centra el formulario
             this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo
             this.Font = new Font("Segoe UI", 10); // fuente del formulario
             this.MinimizeBox = false;
@@ -119,7 +117,7 @@ namespace CrucigramaForms
             this.Controls.AddRange(new Control[] { lblTitulo, lblIntegrantes, btRegistrar, btLogin, btSalirApp });
 
         }
-        private void btRegistrar_Click (object sender, EventArgs e)
+        private void btRegistrar_Click(object sender, EventArgs e)
         {
             FormRegistro formRegistro = new FormRegistro();
             formRegistro.ShowDialog();
@@ -135,7 +133,7 @@ namespace CrucigramaForms
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

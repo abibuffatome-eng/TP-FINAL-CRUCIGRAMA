@@ -11,9 +11,7 @@ using System.Windows.Forms;
 using CrucigramaForms.Modelos;
 using CrucigramaForms.Persistencia;
 using CrucigramaForms.Logica;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Globalization;
 
 namespace CrucigramaForms.formularios
 {
@@ -24,18 +22,13 @@ namespace CrucigramaForms.formularios
         private TextBox[,] _celdas;
         private Button btVerificar, btSalir;
         private Panel panelGrilla;
+        private ListBox lbPistas;
+        private bool seAdvirtio = false;
 
         // constructor de prueba — sin parámetros
         public FormCrucigrama()
         {
             InitializeComponent();
-
-            var nivel = new Nivel(2, "Medio", 10, 10, 250);
-            _crucigrama = new Crucigrama(1, "Crucigrama Medio", nivel);
-            _crucigrama.Palabras.Add(new Palabra(1, 1, "GATO", "Animal doméstico", 0, 0, "horizontal"));
-            _crucigrama.Palabras.Add(new Palabra(2, 1, "GUERRA", "Conflicto armado", 0, 0, "vertical"));
-
-            cJuego.IniciarPartida(_crucigrama);
             CrearFormulario();
         }
 
@@ -47,63 +40,87 @@ namespace CrucigramaForms.formularios
             _usuario = usuario;
             cJuego.IniciarPartida(_crucigrama);
             CrearFormulario();
+
         }
 
         private void CrearFormulario()
         {
-            this.Text = "  " + _crucigrama.Titulo; 
-            this.Size = new Size(820, 680);
+            this.Text = "  " + _crucigrama.Titulo;
+            // Aumentamos el tamaño total del formulario
+            this.Size = new Size(1200, 750);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(248, 246, 242); 
-            this.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo crema
+            this.Font = new Font("Segoe UI", 11); // Fuente base un poco más grande
 
             panelGrilla = new Panel();
-            panelGrilla.Location = new Point(35, 35); 
+            panelGrilla.Location = new Point(35, 35); // Un poco más de margen inicial
             panelGrilla.AutoSize = true;
-            panelGrilla.BackColor = Color.Transparent; 
+            panelGrilla.BackColor = Color.Transparent;
 
             ArmarGrilla();
 
-            
+
+            // LISTBOX DE PISTAS: más a la derecha y con fuente más grande
+            lbPistas = new ListBox
+            {
+                Location = new Point(800, 35), // Posición fija a la derecha para que no se solape
+                Size = new Size(350, 500),    // Más ancho y más alto
+                Font = new Font("Segoe UI", 10.5F), // Letra más legible
+                ForeColor = Color.FromArgb(60, 60, 60),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.White
+            };
+
+            lbPistas.Items.Add("--- PISTAS ---");
+            foreach (var p in _crucigrama.Palabras)
+            {
+                string orientacion = p.EsHorizontal() ? "Horizontal" : "Vertical";
+                lbPistas.Items.Add($"({p.Fila}, {p.Columna}) [{orientacion}]");
+                lbPistas.Items.Add($"  -> {p.Pista}");
+                lbPistas.Items.Add(""); // Espacio extra
+            }
+
+            // BOTONES más grandes y con mejor disposición
             btVerificar = new Button
             {
                 Text = "VERIFICAR",
-                Size = new Size(160, 42),
-                Location = new Point(35, 450),
-                BackColor = Color.FromArgb(135, 152, 137), 
+                Size = new Size(180, 46), // Botón más grande equilibrado
+                Location = new Point(35, 620), // Debajo de la grilla
+                BackColor = Color.FromArgb(135, 152, 137), // Verde Sage
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold)
             };
-            btVerificar.FlatAppearance.BorderSize = 0; 
+            btVerificar.FlatAppearance.BorderSize = 0;
 
-            
+
             btSalir = new Button
             {
                 Text = "SALIR",
-                Size = new Size(160, 42),
-                Location = new Point(210, 450),
-                BackColor = Color.FromArgb(248, 246, 242), 
-                ForeColor = Color.FromArgb(100, 90, 85),   
-                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                Size = new Size(180, 46),
+                Location = new Point(235, 620), // A la derecha del de verificar
+                BackColor = Color.FromArgb(248, 246, 242),
+                ForeColor = Color.FromArgb(100, 90, 85),
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold)
             };
-            btSalir.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188); 
+            btSalir.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188);
             btSalir.FlatAppearance.BorderSize = 1;
 
             btVerificar.Click += btVerificar_Click;
             btSalir.Click += btSalir_Click;
 
-            this.Controls.AddRange(new Control[] { panelGrilla, btVerificar, btSalir });
-        }
+            this.Controls.AddRange(new Control[] { panelGrilla, btVerificar, btSalir, lbPistas });
 
+
+        }
         private void ArmarGrilla()
         {
             int filas = _crucigrama.Nivel.Filas;
             int columnas = _crucigrama.Nivel.Columnas;
-            int tamCelda = 38; 
+            int tamCelda = 38;
 
             _celdas = new TextBox[filas, columnas];
 
@@ -116,10 +133,10 @@ namespace CrucigramaForms.formularios
                     TextBox tb = new TextBox
                     {
                         Size = new Size(tamCelda, tamCelda),
-                        Location = new Point(c * (tamCelda - 1), f * (tamCelda - 1)), 
+                        Location = new Point(c * (tamCelda - 1), f * (tamCelda - 1)),
                         TextAlign = HorizontalAlignment.Center,
-                        Font = new Font("Segoe UI", 13, FontStyle.Regular), 
-                        ForeColor = Color.FromArgb(60, 60, 60), 
+                        Font = new Font("Segoe UI", 13, FontStyle.Regular),
+                        ForeColor = Color.FromArgb(60, 60, 60),
                         MaxLength = 1,
                         Tag = new Point(f, c),
                         BorderStyle = BorderStyle.FixedSingle
@@ -127,7 +144,7 @@ namespace CrucigramaForms.formularios
 
                     if (celda.EstaBloqueada)
                     {
-                        tb.BackColor = Color.FromArgb(120, 110, 102); 
+                        tb.BackColor = Color.FromArgb(120, 110, 102);
                         tb.Enabled = false;
                     }
                     else
@@ -141,6 +158,17 @@ namespace CrucigramaForms.formularios
                     panelGrilla.Controls.Add(tb);
                 }
             }
+        }
+
+        private void lbPistas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Obtener la palabra seleccionada
+            var palabra = _crucigrama.Palabras[lbPistas.SelectedIndex];
+
+            // Resaltar el inicio de la palabra en la grilla (puedes cambiar el color del borde o fondo)
+            TextBox tbInicio = _celdas[palabra.Fila, palabra.Columna];
+            tbInicio.Focus();
+            tbInicio.BackColor = Color.LightYellow; // Un color que indique selección
         }
         private void Celda_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -172,48 +200,61 @@ namespace CrucigramaForms.formularios
 
         private void btVerificar_Click(object sender, EventArgs e)
         {
-            int filas = _crucigrama.Nivel.Filas;
-            int columnas = _crucigrama.Nivel.Columnas;
-
-            for (int f = 0; f < filas; f++)
+            if (!seAdvirtio)
             {
-                for (int c = 0; c < columnas; c++)
+                MessageBox.Show($"cada verificacion que tenga un error restara 10 puntos al puntaje total",
+                    "advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                seAdvirtio = true;
+            }
+            else
+            {
+                MessageBox.Show($"se te descontaron 10 punto",
+                    "advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                int filas = _crucigrama.Nivel.Filas;
+                int columnas = _crucigrama.Nivel.Columnas;
+
+                for (int f = 0; f < filas; f++)
                 {
-                    Celda celda = _crucigrama.Grilla[f, c];
-                    TextBox tb = _celdas[f, c];
-
-                    // saltear bloqueadas (negras) y ya verificadas (verdes)
-                    if (celda.EstaBloqueada || celda.EstaVerificada) continue;
-
-                    // saltear celdas vacías
-                    if (celda.EstaVacia()) continue;
-
-                    if (celda.EsCorrecta())
+                    for (int c = 0; c < columnas; c++)
                     {
-                        celda.EstaVerificada = true;
-                        tb.BackColor = Color.LightGreen;
-                        tb.ReadOnly = true;         // no se puede editar más
-                    }
-                    else
-                    {
-                        tb.BackColor = Color.LightCoral; // rojo suave para incorrectas
+                        Celda celda = _crucigrama.Grilla[f, c];
+                        TextBox tb = _celdas[f, c];
+
+                        if (celda.EstaBloqueada || celda.EstaVerificada) continue;
+                        if (celda.EstaVacia()) continue;
+
+                        if (celda.EsCorrecta())
+                        {
+                            celda.EstaVerificada = true;
+                            tb.BackColor = Color.LightGreen;
+                            tb.ReadOnly = true;
+                        }
+                        else
+                        {
+                            tb.BackColor = Color.LightCoral;
+                        }
                     }
                 }
-            }
 
-            // verificar si ya ganó
-            if (cJuego.VerificarCrucigrama(_crucigrama))
-            {
-                var partida = cJuego.FinalizarPartida(_crucigrama, _usuario?.Id ?? 0);
-                if (_usuario != null)
-                    new pPartida().Agregar(partida);
+                // verificar si ya ganó
+                if (cJuego.VerificarCrucigrama(_crucigrama))
+                {
+                    var partida = cJuego.FinalizarPartida(_crucigrama, _usuario?.Id ?? 0);
+                    if (_usuario != null)
+                        new pPartida().Agregar(partida);
 
-                MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}",
-                                "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                    MessageBox.Show($"¡Ganaste! Puntaje: {partida.Puntaje}",
+                                    "¡Felicitaciones!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.Close();
+                }
+                else
+                {
+                    //verificacion fallida
+                    _crucigrama.IntentosFallidos++;
+                }
             }
         }
-
         private void btSalir_Click(object sender, EventArgs e)
         {
             this.Close();

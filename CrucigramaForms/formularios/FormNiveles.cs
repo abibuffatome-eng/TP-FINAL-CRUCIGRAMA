@@ -8,20 +8,26 @@ using System.Windows.Forms;
 using CrucigramaForms.Persistencia;
 using CrucigramaForms.Modelos;
 using System.Globalization;
-using System.Text;
 
 namespace CrucigramaForms.formularios
 {
     public partial class FormNiveles : Form
     {
         private Label label1;
-        private Button btFacil, btMedio, btDificil;
+        private Button btFacil, btMedio, btDificil, btRanking;
+        Usuario usuario_;
         public FormNiveles()
         {
+
             InitializeComponent();
             CrearFormularioNiveles();
         }
-
+        internal FormNiveles(Usuario usuario_)
+        {
+            this.usuario_ = usuario_;
+            InitializeComponent();
+            CrearFormularioNiveles();
+        }
         private static string NormalizeString(string text)
         {
             if (string.IsNullOrEmpty(text)) return string.Empty;
@@ -37,10 +43,10 @@ namespace CrucigramaForms.formularios
         }
         private void CrearFormularioNiveles()
         {
-            this.Size = new Size(600, 420); //tamaño del formulario
+            this.Size = new Size(600, 450); // Ajustamos un poquito el alto para que entre el ranking cómodo
             this.FormBorderStyle = FormBorderStyle.FixedDialog; //evita q usuario redimensione el formulario
             this.StartPosition = FormStartPosition.CenterParent; // centra el formulario
-            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo
+            this.BackColor = Color.FromArgb(248, 246, 242); //color de fondo crema
             this.Font = new Font("Segoe UI", 10); // fuente del formulario
             this.MinimizeBox = false;
             this.MaximizeBox = false;
@@ -100,15 +106,32 @@ namespace CrucigramaForms.formularios
             };
             btDificil.FlatAppearance.BorderSize = 0;
 
+            btRanking = new Button
+            {
+                Left = MitadPantalla - (anchoBoton / 2),
+                Top = 310,
+                Width = anchoBoton,
+                Height = 40,
+                Text = "RANKING",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                BackColor = Color.FromArgb(248, 246, 242),
+                ForeColor = Color.FromArgb(100, 90, 85),
+                FlatStyle = FlatStyle.Flat
+            };
+            btRanking.FlatAppearance.BorderColor = Color.FromArgb(200, 195, 188);
+            btRanking.FlatAppearance.BorderSize = 1;
+
             btFacil.Cursor = Cursors.Hand;
             btMedio.Cursor = Cursors.Hand;
             btDificil.Cursor = Cursors.Hand;
+            btRanking.Cursor = Cursors.Hand;
 
             btFacil.Click += btFacil_Click;
             btMedio.Click += btMedio_Click;
             btDificil.Click += btDificil_Click;
+            btRanking.Click += btRanking_Click;
 
-            this.Controls.AddRange(new Control[] { label1, btFacil, btMedio, btDificil });
+            this.Controls.AddRange(new Control[] { label1, btFacil, btMedio, btDificil, btRanking });
 
         }
         private void btFacil_Click(object sender, EventArgs e)
@@ -122,6 +145,13 @@ namespace CrucigramaForms.formularios
         private void btDificil_Click(object sender, EventArgs e)
         {
             ShowSeleccionCrucigramaForLevel("Dificil");
+        }
+        private void btRanking_Click(object sender, EventArgs e)
+        {
+            var ranking = new FormRanking();
+            this.Hide();
+            ranking.ShowDialog();
+            this.Show();
         }
 
         private void ShowSeleccionCrucigramaForLevel(string nivelNombre)
@@ -213,9 +243,10 @@ namespace CrucigramaForms.formularios
             // ensure grilla built
             selected.ConstruirGrilla();
 
-            using var juego = new FormCrucigrama(selected, null);
+            using var juego = new FormCrucigrama(selected, usuario_);
             this.Hide();
             juego.ShowDialog();
+
             this.Show();
         }
     }
