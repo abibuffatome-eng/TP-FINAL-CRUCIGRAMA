@@ -94,7 +94,8 @@ namespace CrucigramaForms.formularios
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.FromArgb(60, 60, 60),
                 BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.White
+                BackColor = Color.White,
+                HorizontalScrollbar = true
             };
 
             // Título y lista para pistas verticales
@@ -114,7 +115,8 @@ namespace CrucigramaForms.formularios
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.FromArgb(60, 60, 60),
                 BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.White
+                BackColor = Color.White,
+                HorizontalScrollbar = true
             };
 
             // Carga las pistas en sus respectivas listas
