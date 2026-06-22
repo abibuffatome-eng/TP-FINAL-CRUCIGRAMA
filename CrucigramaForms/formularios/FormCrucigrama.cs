@@ -70,7 +70,8 @@ namespace CrucigramaForms.formularios
                 Font = new Font("Segoe UI", 10.5F), // Letra más legible
                 ForeColor = Color.FromArgb(60, 60, 60),
                 BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.White
+                BackColor = Color.White,
+                HorizontalScrollbar = true
             };
 
             lbPistas.Items.Add("--- PISTAS ---");
